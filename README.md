@@ -1,4 +1,4 @@
-# FluentdCfSyslog
+# SyslogRFC5424
 
 Best Ever
 

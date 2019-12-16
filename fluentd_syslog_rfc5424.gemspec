@@ -1,16 +1,15 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "fluentd_cf_syslog/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "fluentd_cf_syslog"
-  spec.version       = FluentdCfSyslog::VERSION
-  spec.authors       = ["Travis Patterson, Rachel Heaton"]
-  spec.email         = %w(tpatterson@pivotal.io rheaton@pivotal.io)
+  spec.name          = "fluentd_syslog_rfc5424"
+  spec.version       = "0.1"
+  spec.authors       = ["Travis Patterson, Rachel Heaton", "Ben Fuller"]
+  spec.email         = %w(tpatterson@pivotal.io rheaton@pivotal.io bfuller@pivotal.io)
 
-  spec.summary       = %q{Best Loggin Gem Ever}
-  spec.description   = %q{See above}
+  spec.summary       = %q{Send messages via rfc5424}
+  spec.description   = %q{Send messages via rfc5424}
   spec.license       = "Apache 2"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -35,10 +34,11 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 1.17"
+  spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "test-unit"
+  spec.add_development_dependency "test-unit-rr"
+  spec.add_development_dependency "pry"
 
   spec.add_runtime_dependency "fluentd"
-  spec.add_runtime_dependency "syslogger5424", "~> 0.5.3"
 end
