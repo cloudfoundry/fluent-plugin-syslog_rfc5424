@@ -14,23 +14,15 @@ module Fluent
       config_param :host, :string
       config_param :port, :integer
       config_param :transport, :string, default: "tls"
-      # config_param :enterprise_id, :integer
 
-      #### Sync Buffered Output ##############################
-      # Implement write() if your plugin uses a normal buffer.
-      # Read "Sync Buffered Output" for details.
-      ########################################################
       def write(chunk)
-        begin
-          socket = self.socket_create(@transport.to_sym, @host, @port)
-          chunk.each do |time, record|
-            # TODO: consider using extract_placeholder for logs
-            syslog = RFC5424::Formatter.format(log: record["log"], timestamp: time)
-            socket.puts syslog.size.to_s + " " + syslog
+          self.socket_create(@transport.to_sym, @host, @port) do | socket |
+            chunk.each do |time, record|
+              # TODO: consider using extract_placeholder for logs
+              syslog = RFC5424::Formatter.format(log: record["log"], timestamp: time)
+              socket.puts syslog.size.to_s + " " + syslog
+            end
           end
-        rescue Exception => e
-          puts e.message
-        end
       end
     end
   end

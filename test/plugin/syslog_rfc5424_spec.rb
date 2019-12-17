@@ -10,10 +10,6 @@ class SyslogRFC5424Test < Test::Unit::TestCase
     Fluent::Test::Driver::Output.new(Fluent::Plugin::SyslogRFC5424).configure(conf)
   end
 
-  def create_socket_mock()
-
-  end
-
   def test_configure
     d = create_driver %[
       @type syslog_rfc5424
@@ -32,16 +28,14 @@ class SyslogRFC5424Test < Test::Unit::TestCase
       port 123
     ]
 
+    socket = Object.new
+    mock(socket).puts("1 l")
     n = Fluent::EventTime.now
     mock(RFC5424::Formatter).format(timestamp: n, log: "hi") { "l" }
-    any_instance_of(Fluent::Plugin::SyslogRFC5424) do |fluent_plugin|
-      mock(fluent_plugin).socket_create(:tls, "example.com", 123) do
-        socket = Object.new
-        mock(socket).puts("1 l")
-        socket
-      end
-    end
 
+    any_instance_of(Fluent::Plugin::SyslogRFC5424) do |fluent_plugin|
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123).yields(socket)
+    end
 
     output_driver.run do
       output_driver.feed("tag", n , {"log" => "hi"})
@@ -56,14 +50,13 @@ class SyslogRFC5424Test < Test::Unit::TestCase
       transport tcp
     ]
 
+      socket = Object.new
+      mock(socket).puts("1 l")
       n = Fluent::EventTime.now
       mock(RFC5424::Formatter).format(timestamp: n, log: "hi") { "l" }
+
       any_instance_of(Fluent::Plugin::SyslogRFC5424) do |fluent_plugin|
-        mock(fluent_plugin).socket_create(:tcp, "example.com", 123) do
-          socket = Object.new
-          mock(socket).puts("1 l")
-          socket
-        end
+        mock(fluent_plugin).socket_create(:tcp, "example.com", 123).yields(socket)
       end
 
 
