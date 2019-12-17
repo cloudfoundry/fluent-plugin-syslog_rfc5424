@@ -3,10 +3,7 @@ require 'fluent/plugin/output'
 module Fluent
   module Plugin
     class SyslogRFC5424 < Output
-
-      # Register the name of your plugin (Choose a name which
-      # is not used by any other output plugins).
-      Fluent::Plugin.register_output('SyslogRFC5424', self)
+      Fluent::Plugin.register_output('syslog_rfc5424', self)
 
       helpers :socket
 
