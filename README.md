@@ -19,7 +19,37 @@ Or install it yourself as:
 
 ## Usage
 
-Dont do it
+```
+<match **>
+  @type syslog_rfc5424
+  host SYSLOG-HOST
+  port SYSLOG-PORT
+  # transport tls, udp, tcp (defaults to tls)
+  <buffer>
+    @type memory
+    flush_interval 10s
+  </buffer>
+</match>
+```
+
+## Configuration
+
+| name              | type       | placeholder support | description                               |
+| --------------    | -------    | -----------         | ---------------------------------         |
+| host              | string     |                     | syslog target host                        |
+| port              | integer    |                     | syslog target port                        |
+| transport         | string     |                     | transport protocol (tls, udp, or tcp)     |
+
+### Common Configuration
+
+#### Buffer Section
+
+| name                        |
+| --------------              |
+| flush_mode                  |
+| flush_interval              |
+| flush_thread_interval       |
+| flush_thread_burst_interval |
 
 ## Development
 
@@ -29,4 +59,4 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/loggregator/fluentd_syslog_rfc5424.
+Bug reports and pull requests are welcome on GitHub at https://github.com/cloudfoundry/fluentd_syslog_rfc5424.
