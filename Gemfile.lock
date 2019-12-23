@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     fluent-plugin-syslog_rfc5424 (0.1)
-      fluentd
+      fluentd (~> 1.8)
 
 GEM
   remote: https://rubygems.org/
@@ -50,12 +50,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler
+  bundler (~> 2.0)
   fluent-plugin-syslog_rfc5424!
-  pry
+  pry (~> 0.12)
   rake (~> 10.0)
-  test-unit
-  test-unit-rr
+  test-unit (~> 3.3)
+  test-unit-rr (~> 1.0)
 
 BUNDLED WITH
    2.0.2
