@@ -1,5 +1,5 @@
 require "test_helper"
-require "fluent/plugin/out_syslog_rcf5424"
+require "fluent/plugin/out_syslog_rfc5424"
 
 class SyslogRFC5424Test < Test::Unit::TestCase
   def setup

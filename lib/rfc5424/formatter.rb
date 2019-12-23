@@ -15,19 +15,21 @@ module RFC5424
         msg_id: "-",
         sd: "-"
       )
-        if timestamp.nil?
-          timestamp = "-"
-        else
-          timestamp = DateTime.strptime(timestamp.to_s,'%s').rfc3339(6)
-        end
+        Format % [priority, format_time(timestamp), hostname[0..254], app_name[0..47], proc_id[0..127], msg_id[0..31], sd, log]
+      end
 
-        Format % [priority, timestamp, hostname[0..254], app_name[0..47], proc_id[0..127], msg_id[0..31], sd, log]
+      def format_time(timestamp)
+        return "-" if timestamp.nil?
+        return Time.at(timestamp.to_r).utc.to_datetime.rfc3339(6) if timestamp.is_a?(Fluent::EventTime)
+
+        DateTime.strptime(timestamp.to_s, '%s').rfc3339(6)
       end
     end
   end
 
   class StructuredData
     attr_reader :sd_id, :sd_elements
+
     def initialize(sd_id:, sd_elements: {})
       @sd_id = sd_id
       @sd_elements = sd_elements

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    fluentd_syslog_rfc5424 (0.1)
+    fluent-plugin-syslog_rfc5424 (0.1)
       fluentd
 
 GEM
@@ -51,7 +51,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler
-  fluentd_syslog_rfc5424!
+  fluent-plugin-syslog_rfc5424!
   pry
   rake (~> 10.0)
   test-unit

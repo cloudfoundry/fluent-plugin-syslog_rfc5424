@@ -3,14 +3,14 @@ lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
-  spec.name          = "fluentd_syslog_rfc5424"
+  spec.name          = "fluent-plugin-syslog_rfc5424"
   spec.version       = "0.1"
-  spec.authors       = ["Travis Patterson, Rachel Heaton", "Ben Fuller"]
-  spec.email         = %w(tpatterson@pivotal.io rheaton@pivotal.io bfuller@pivotal.io)
+  spec.authors       = ["Pivotal"]
+  spec.email         = %w(cf-loggregator@pivotal.io)
 
-  spec.summary       = %q{Send messages via rfc5424}
-  spec.description   = %q{Send messages via rfc5424}
-  spec.license       = "TODO"
+  spec.summary       = %q{FluentD output plugin to send messages via rfc5424}
+  spec.description   = %q{FluentD output plugin to send messages via rfc5424}
+  spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})

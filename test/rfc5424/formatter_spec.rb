@@ -14,6 +14,12 @@ class RFC5424::FormatterTest < Test::Unit::TestCase
     assert_equal log, "<14>1 1970-01-01T00:00:00.000000+00:00 - - - - - test-log"
   end
 
+  def test_with_timestamp_nano
+    log = RFC5424::Formatter.format(timestamp: Fluent::EventTime.new(0, 123456000), log: "test-log")
+
+    assert_equal log, "<14>1 1970-01-01T00:00:00.123456+00:00 - - - - - test-log"
+  end
+
   def test_with_priority
     log = RFC5424::Formatter.format( priority: 1, log: "test-log")
     assert_equal log, "<1>1 - - - - - - test-log"
@@ -70,6 +76,4 @@ class RFC5424::FormatterTest < Test::Unit::TestCase
     log = RFC5424::Formatter.format( sd: structured_data_1.to_s + structured_data_2.to_s, log: "test-log")
     assert_equal log, '<14>1 - - - - - [test@123 a="a-value"][test2@123 b="b-value"] test-log'
   end
-
-
 end

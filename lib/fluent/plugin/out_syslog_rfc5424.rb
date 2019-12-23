@@ -1,4 +1,5 @@
 require 'fluent/plugin/output'
+require 'rfc5424/formatter'
 
 module Fluent
   module Plugin
@@ -7,7 +8,6 @@ module Fluent
 
       helpers :socket
 
-      # Define parameters for your plugin
       config_param :host, :string
       config_param :port, :integer
       config_param :transport, :string, default: "tls"
@@ -15,7 +15,6 @@ module Fluent
       def write(chunk)
           self.socket_create(@transport.to_sym, @host, @port) do | socket |
             chunk.each do |time, record|
-              # TODO: consider using extract_placeholder for logs
               syslog = RFC5424::Formatter.format(log: record["log"], timestamp: time)
               socket.puts syslog.size.to_s + " " + syslog
             end
