@@ -1,5 +1,7 @@
 # SyslogRFC5424
 
+[![Build Status](https://travis-ci.org/cloudfoundry/fluent-plugin-syslog_rfc5424.svg?branch=master)](https://travis-ci.org/cloudfoundry/fluent-plugin-syslog_rfc5424)
+
 
 ## Installation
 
