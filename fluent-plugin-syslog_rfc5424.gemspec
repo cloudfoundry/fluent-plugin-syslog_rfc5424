@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "test-unit", "~> 3.3"
   spec.add_development_dependency "test-unit-rr", "~> 1.0"
   spec.add_development_dependency "pry", "~> 0.12"
+  spec.add_development_dependency "minitest"
 
   spec.add_runtime_dependency "fluentd", "~> 1.7"
 end
