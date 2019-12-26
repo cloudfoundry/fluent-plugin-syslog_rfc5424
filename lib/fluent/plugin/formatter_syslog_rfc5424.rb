@@ -1,3 +1,5 @@
+require 'rfc5424/formatter'
+
 module Fluent
   module Plugin
     class FormatterSyslogRFC5424 < Formatter
