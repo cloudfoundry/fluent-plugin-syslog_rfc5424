@@ -3,7 +3,7 @@ require "rfc5424/formatter"
 
 class RFC5424::FormatterTest < Test::Unit::TestCase
   def test_only_log
-    log = RFC5424::Formatter.format( log: "test-log")
+    log = RFC5424::Formatter.format(log: "test-log")
     assert_equal log, "<14>1 - - - - - - test-log"
   end
 

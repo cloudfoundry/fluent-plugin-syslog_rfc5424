@@ -1,7 +1,11 @@
-# FluentD Output Plugin: Syslog RFC5424
+# FluentD Output & Formatter Plugins: Syslog RFC5424
 
 [![Build Status](https://travis-ci.org/cloudfoundry/fluent-plugin-syslog_rfc5424.svg?branch=master)](https://travis-ci.org/cloudfoundry/fluent-plugin-syslog_rfc5424)
 
+
+Formatter plugin adheres to [RFC5424](https://tools.ietf.org/html/rfc5424). 
+
+Output plugin adheres to [RFC6587](https://tools.ietf.org/html/rfc6587) and [RFC5424](https://tools.ietf.org/html/rfc5424).
 
 ## Installation
 
@@ -19,14 +23,13 @@ Or install it yourself as:
 
     $ gem install fluentd_syslog_rfc5424
 
-## Usage
+## Output Usage
 
 ```
 <match **>
   @type syslog_rfc5424
   host SYSLOG-HOST
   port SYSLOG-PORT
-  # transport tls, udp, tcp (defaults to tls)
   <buffer>
     @type memory
     flush_interval 10s
@@ -34,24 +37,40 @@ Or install it yourself as:
 </match>
 ```
 
-## Configuration
+### Configuration
 
 | name              | type       | placeholder support | description                               |
 | --------------    | -------    | -----------         | ---------------------------------         |
 | host              | string     |                     | syslog target host                        |
 | port              | integer    |                     | syslog target port                        |
-| transport         | string     |                     | transport protocol (tls, udp, or tcp)     |
+| transport         | string     |                     | transport protocol (tls [default], udp, or tcp)     |
 
-### Common Configuration
+#### Format Section
 
-#### Buffer Section
+Defaults to `syslog_rfc5424`
 
-| name                        |
-| --------------              |
-| flush_mode                  |
-| flush_interval              |
-| flush_thread_interval       |
-| flush_thread_burst_interval |
+| name                      |type     | description |
+| --------------            | ------- | -------     |
+| rfc6587_message_size      | boolean | prepends message length for syslog transmission (true by default)  |
+
+
+## Formatter Usage
+
+```
+<match **>
+  @type example
+  <format>
+    @type syslog_rfc5424
+  </format>
+</match>
+```
+
+### Configuration
+
+| name                      |type     | description |
+| --------------            | ------- | -------     |
+| rfc6587_message_size      | boolean | prepends message length for syslog transmission (false by default)  |
+
 
 ## Development
 
@@ -62,3 +81,12 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/cloudfoundry/fluentd_syslog_rfc5424.
+
+## Publishing
+
+1. Run tests `bundle exec rake`
+1. Push changes
+1. Create & push git tag with version
+1. Change version in `.gemspec`
+1. Build gem `gem build fluent-plugin-syslog_rfc5424`
+1. Push `.gem` file to rubygems

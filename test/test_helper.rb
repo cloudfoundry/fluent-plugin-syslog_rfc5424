@@ -6,6 +6,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 require "fluent/test"
 require "fluent/test/driver/output"
+require "fluent/test/driver/formatter"
 
 require "test/unit/rr"
 require "minitest/mock"

@@ -1,13 +1,15 @@
 require "test_helper"
 require "fluent/plugin/out_syslog_rfc5424"
 
-class SyslogRFC5424Test < Test::Unit::TestCase
+class OutSyslogRFC5424Test < Test::Unit::TestCase
   def setup
     Fluent::Test.setup
+    @time = Fluent::EventTime.new(0, 123456)
+    @formatted_log = "51 <14>1 1970-01-01T00:00:00.000123+00:00 - - - - - hi"
   end
 
   def create_driver(conf = CONFIG)
-    Fluent::Test::Driver::Output.new(Fluent::Plugin::SyslogRFC5424).configure(conf)
+    Fluent::Test::Driver::Output.new(Fluent::Plugin::OutSyslogRFC5424).configure(conf)
   end
 
   def test_configure
@@ -28,19 +30,16 @@ class SyslogRFC5424Test < Test::Unit::TestCase
       port 123
     )
 
-    socket = Object.new
-    mock(socket).puts("1 l")
-    mock(socket).close
+    socket = Minitest::Mock.new
+    mock(socket).puts(@formatted_log)
+    stub(socket).close
 
-    n = Fluent::EventTime.now
-    mock(RFC5424::Formatter).format(timestamp: n, log: "hi") { "l" }
-
-    any_instance_of(Fluent::Plugin::SyslogRFC5424) do |fluent_plugin|
+    any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
       mock(fluent_plugin).socket_create(:tls, "example.com", 123).returns(socket)
     end
 
     output_driver.run do
-      output_driver.feed("tag", n , {"log" => "hi"})
+      output_driver.feed("tag", @time, {"log" => "hi"})
     end
   end
 
@@ -53,35 +52,35 @@ class SyslogRFC5424Test < Test::Unit::TestCase
     )
 
     socket = Minitest::Mock.new
-    mock(socket).puts("1 l")
-    mock(socket).close
+    mock(socket).puts(@formatted_log)
+    stub(socket).close
 
-    n = Fluent::EventTime.now
-    mock(RFC5424::Formatter).format(timestamp: n, log: "hi") { "l" }
-
-    any_instance_of(Fluent::Plugin::SyslogRFC5424) do |fluent_plugin|
+    any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
       mock(fluent_plugin).socket_create(:tcp, "example.com", 123).returns(socket)
     end
 
     output_driver.run do
-      output_driver.feed("tag", n , {"log" => "hi"})
+      output_driver.feed("tag", @time, {"log" => "hi"})
     end
   end
 
-  def test_close
-    plugin = Fluent::Plugin::SyslogRFC5424.new
-    plugin.configure(Fluent::Config::Element.new("no", "no", {"host" => 'example.com', "port" => 123}, []))
+  def test_close_is_called_on_sockets
+    output_driver = create_driver %(
+      @type syslog_rfc5424
+      host example.com
+      port 123
+    )
 
     socket = Minitest::Mock.new
-    mock(socket).puts("1 l")
+    stub(socket).puts(@formatted_log)
+
+    any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123).returns(socket)
+    end
+
     mock(socket).close
-
-    n = Fluent::EventTime.now
-    mock(RFC5424::Formatter).format(timestamp: n, log: nil) { "l" }
-
-    mock(plugin).socket_create(:tls, "example.com", 123).returns(socket)
-    plugin.write([[n, {}]])
-
-    plugin.close
+    output_driver.run do
+      output_driver.feed("tag", @time , {"log" => "hi"})
+    end
   end
 end

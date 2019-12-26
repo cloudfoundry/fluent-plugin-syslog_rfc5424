@@ -1,31 +1,33 @@
 require 'fluent/plugin/output'
-require 'rfc5424/formatter'
 
 module Fluent
   module Plugin
-    class SyslogRFC5424 < Output
+    class OutSyslogRFC5424 < Output
       Fluent::Plugin.register_output('syslog_rfc5424', self)
 
-      helpers :socket
+      helpers :socket, :formatter
+      DEFAULT_FORMATTER = "syslog_rfc5424"
 
       config_param :host, :string
       config_param :port, :integer
       config_param :transport, :string, default: "tls"
+      config_section :format do
+        config_set_default :@type, DEFAULT_FORMATTER
+        config_set_default :rfc6587_message_size, true
+      end
 
       def configure(config)
         super
         @sockets = {}
+        @formatter = formatter_create
       end
 
       def write(chunk)
         socket = find_or_create_socket(@transport.to_sym, @host, @port)
+        tag = chunk.metadata.tag
         chunk.each do |time, record|
-          syslog = RFC5424::Formatter.format(log: record["log"], timestamp: time)
-          socket.puts syslog.size.to_s + " " + syslog
+          socket.puts @formatter.format(tag, time, record)
         end
-        # close socket
-        # retry socket
-        # backoff behavior?
       end
 
       def close
