@@ -43,7 +43,13 @@ module Fluent
         socket = find_socket(transport, host, port)
         return socket if socket
 
-        @sockets[socket_key(transport, host, port)] = self.socket_create(transport.to_sym, host, port, insecure: @insecure)
+        @sockets[socket_key(transport, host, port)] = socket_create(transport.to_sym, host, port, socket_options)
+      end
+
+      def socket_options
+        return {} unless @transport == 'tls'
+
+        { insecure: @insecure, verify_fqdn: !@insecure }
       end
 
       def socket_key(transport, host, port)

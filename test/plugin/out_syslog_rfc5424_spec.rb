@@ -35,7 +35,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     stub(socket).close
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
-      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false}).returns(socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true}).returns(socket)
     end
 
     output_driver.run do
@@ -56,7 +56,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     stub(socket).close
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
-      mock(fluent_plugin).socket_create(:tcp, "example.com", 123, {:insecure=>false}).returns(socket)
+      mock(fluent_plugin).socket_create(:tcp, "example.com", 123, {}).returns(socket)
     end
 
     output_driver.run do
@@ -69,7 +69,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
       @type syslog_rfc5424
       host example.com
       port 123
-      transport tcp
+      transport tls
       insecure true
     )
 
@@ -78,7 +78,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     stub(socket).close
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
-      mock(fluent_plugin).socket_create(:tcp, "example.com", 123, {:insecure=>true}).returns(socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>true, :verify_fqdn=>false}).returns(socket)
     end
 
     output_driver.run do
@@ -97,7 +97,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     stub(socket).puts(@formatted_log)
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
-      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false}).returns(socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true}).returns(socket)
     end
 
     mock(socket).close
