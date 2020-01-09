@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "fluent-plugin-syslog_rfc5424"
-  spec.version       = "0.2.1"
+  spec.version       = "0.3.0"
   spec.authors       = ["Pivotal"]
   spec.email         = %w(cf-loggregator@pivotal.io)
   spec.homepage      = "https://github.com/cloudfoundry/fluent-plugin-syslog_rfc5424"
