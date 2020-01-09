@@ -11,6 +11,7 @@ module Fluent
       config_param :host, :string
       config_param :port, :integer
       config_param :transport, :string, default: "tls"
+      config_param :insecure, :bool, default: false
       config_section :format do
         config_set_default :@type, DEFAULT_FORMATTER
         config_set_default :rfc6587_message_size, true
@@ -42,7 +43,7 @@ module Fluent
         socket = find_socket(transport, host, port)
         return socket if socket
 
-        @sockets[socket_key(transport, host, port)] = self.socket_create(transport.to_sym, host, port)
+        @sockets[socket_key(transport, host, port)] = self.socket_create(transport.to_sym, host, port, insecure: @insecure)
       end
 
       def socket_key(transport, host, port)
