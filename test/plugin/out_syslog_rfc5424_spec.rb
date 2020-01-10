@@ -5,7 +5,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
   def setup
     Fluent::Test.setup
     @time = Fluent::EventTime.new(0, 123456)
-    @formatted_log = "51 <14>1 1970-01-01T00:00:00.000123+00:00 - - - - - hi"
+    @formatted_log = "68 <14>1 1970-01-01T00:00:00.000123+00:00 - app-name instance-id - - hi"
   end
 
   def create_driver(conf = CONFIG)
