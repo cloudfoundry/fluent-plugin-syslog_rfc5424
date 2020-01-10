@@ -12,6 +12,7 @@ module Fluent
       config_param :port, :integer
       config_param :transport, :string, default: "tls"
       config_param :insecure, :bool, default: false
+      config_param :trusted_ca_path, :string, default: nil
       config_section :format do
         config_set_default :@type, DEFAULT_FORMATTER
         config_set_default :rfc6587_message_size, true
@@ -49,7 +50,7 @@ module Fluent
       def socket_options
         return {} unless @transport == 'tls'
 
-        { insecure: @insecure, verify_fqdn: !@insecure }
+        { insecure: @insecure, verify_fqdn: !@insecure, cert_paths: @trusted_ca_path }
       end
 
       def socket_key(transport, host, port)
