@@ -8,12 +8,17 @@ module Fluent
       config_param :rfc6587_message_size, :bool, default: false
 
       def format(tag, time, record)
+        log.debug(record.map { |k, v| "#{k}=#{v}" }.join('&'))
+
         msg = RFC5424::Formatter.format(
           log: record['log'],
           timestamp: time,
-          app_name: 'app-name',
+          app_name: 'app-guid',
           proc_id: 'instance-id'
         )
+
+        log.debug(msg)
+
         return msg unless @rfc6587_message_size
 
         msg.length.to_s + ' ' + msg
