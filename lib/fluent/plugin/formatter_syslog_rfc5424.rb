@@ -17,8 +17,8 @@ module Fluent
         msg = RFC5424::Formatter.format(
           log: record['log'],
           timestamp: time,
-          app_name: 'app-guid',
-          proc_id: 'instance-id'
+          app_name: record.dig("kubernetes", "labels", "cloudfoundry.org/app_guid") || "-",
+          proc_id: record.dig("kubernetes", "pod_id") || "-"
         )
 
         log.debug("RFC 5424 Message")

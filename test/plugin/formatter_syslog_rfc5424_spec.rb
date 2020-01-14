@@ -17,7 +17,7 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
     tag = "test-formatter"
     time = Fluent::EventTime.new(0, 123456000)
     record = {"log" => "test-log"}
-    assert_equal "<14>1 1970-01-01T00:00:00.123456+00:00 - app-name instance-id - - test-log",
+    assert_equal "<14>1 1970-01-01T00:00:00.123456+00:00 - - - - - test-log",
                  formatter_driver.instance.format(tag, time, record)
   end
 
@@ -29,7 +29,7 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
     tag = "test-formatter"
     time = Fluent::EventTime.new(0, 123456000)
     record = {"log" => "test-log"}
-    assert_equal "<14>1 1970-01-01T00:00:00.123456+00:00 - app-name instance-id - - test-log",
+    assert_equal "<14>1 1970-01-01T00:00:00.123456+00:00 - - - - - test-log",
                  formatter_driver.instance.format(tag, time, record)
   end
 
@@ -42,9 +42,39 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
     time = Fluent::EventTime.new(0, 123456000)
     record = {"log" => "test-log"}
 
-    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - app-name instance-id - - test-log"
+    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - - - - - test-log"
     message_size = formatted_message.length
     assert_equal "#{message_size} #{formatted_message}",
                  formatter_driver.instance.format(tag, time, record)
   end
+
+  def test_format_with_app_name
+    formatter_driver = create_driver %(
+      @type syslog_rfc5424
+    )
+    tag = "test-formatter"
+    time = Fluent::EventTime.new(0, 123456000)
+    record = {"log" => "test-log", "kubernetes" => {"labels" => { "cloudfoundry.org/app_guid" => "custom-value"}}}
+
+    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - custom-value - - - test-log"
+    message_size = formatted_message.length
+    assert_equal "#{formatted_message}",
+                 formatter_driver.instance.format(tag, time, record)
+  end
+
+  def test_format_with_proc_id
+    formatter_driver = create_driver %(
+      @type syslog_rfc5424
+    )
+    tag = "test-formatter"
+    time = Fluent::EventTime.new(0, 123456000)
+    record = {"log" => "test-log", "kubernetes" => {"pod_id" => "custom-value"}}
+
+    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - - custom-value - - test-log"
+    message_size = formatted_message.length
+    assert_equal "#{formatted_message}",
+                 formatter_driver.instance.format(tag, time, record)
+  end
+
+
 end
