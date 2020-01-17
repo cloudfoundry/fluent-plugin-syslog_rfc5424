@@ -11,4 +11,7 @@
 # rspec failure tracking
 .rspec_status
 
+#binary
+fluent-plugin-syslog_rfc5424-*.gem
+
 Gemfile.lock
