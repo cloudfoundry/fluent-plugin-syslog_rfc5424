@@ -51,10 +51,11 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
   def test_format_with_app_name
     formatter_driver = create_driver %(
       @type syslog_rfc5424
+      app_name_field example.custom_field
     )
     tag = "test-formatter"
     time = Fluent::EventTime.new(0, 123456000)
-    record = {"log" => "test-log", "kubernetes" => {"labels" => { "cloudfoundry.org/app_guid" => "custom-value"}}}
+    record = {"log" => "test-log", "example" => {"custom_field" => "custom-value"}}
 
     formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - custom-value - - - test-log"
     message_size = formatted_message.length
@@ -65,10 +66,11 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
   def test_format_with_proc_id
     formatter_driver = create_driver %(
       @type syslog_rfc5424
+      proc_id_field example.custom_field
     )
     tag = "test-formatter"
     time = Fluent::EventTime.new(0, 123456000)
-    record = {"log" => "test-log", "kubernetes" => {"pod_id" => "custom-value"}}
+    record = {"log" => "test-log", "example" => {"custom_field" => "custom-value"}}
 
     formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - - custom-value - - test-log"
     message_size = formatted_message.length

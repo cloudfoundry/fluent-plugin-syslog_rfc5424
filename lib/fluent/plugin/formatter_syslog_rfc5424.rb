@@ -6,6 +6,14 @@ module Fluent
       Fluent::Plugin.register_formatter('syslog_rfc5424', self)
 
       config_param :rfc6587_message_size, :bool, default: false
+      config_param :app_name_field, :string, default: "app_name"
+      config_param :proc_id_field, :string, default: "proc_id"
+
+      def configure(conf)
+        super
+        @app_name_field_array = @app_name_field.split(".")
+        @proc_id_field_array = @proc_id_field.split(".")
+      end
 
       def format(tag, time, record)
         log.debug("Tag")
@@ -17,8 +25,8 @@ module Fluent
         msg = RFC5424::Formatter.format(
           log: record['log'],
           timestamp: time,
-          app_name: record.dig("kubernetes", "labels", "cloudfoundry.org/app_guid") || "-",
-          proc_id: record.dig("kubernetes", "pod_id") || "-"
+          app_name: record.dig(*@app_name_field_array) || "-",
+          proc_id: record.dig(*@proc_id_field_array) || "-"
         )
 
         log.debug("RFC 5424 Message")
