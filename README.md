@@ -39,11 +39,13 @@ Or install it yourself as:
 
 ### Configuration
 
-| name              | type       | placeholder support | description                               |
-| --------------    | -------    | -----------         | ---------------------------------         |
-| host              | string     |                     | syslog target host                        |
-| port              | integer    |                     | syslog target port                        |
-| transport         | string     |                     | transport protocol (tls [default], udp, or tcp)     |
+| name              | type       | description                               |
+| --------------    | -------    | ---------------------------------         |
+| host              | string     | syslog target host                        |
+| port              | integer    | syslog target port                        |
+| transport         | string     | transport protocol (tls [default], udp, or tcp) |
+| insecure          | boolean    | skip ssl validation |
+| trusted_ca_path   | string     | file path to ca to trust |
 
 #### Format Section
 
@@ -52,24 +54,22 @@ Defaults to `syslog_rfc5424`
 | name                      |type     | description |
 | --------------            | ------- | -------     |
 | rfc6587_message_size      | boolean | prepends message length for syslog transmission (true by default)  |
+| app_name_field            | string  | sets app name in syslog from field in fluentd, delimited by '.' (default app_name) |
+| proc_id_field             | string  | sets proc id in syslog from field in fluentd, delimited by '.' (default proc_id) |
 
 
 ## Formatter Usage
 
 ```
 <match **>
-  @type example
+  @type syslog_rfc5424
   <format>
     @type syslog_rfc5424
+    app_name_field example.custom_field_1
+    proc_id_field example.custom_field_2
   </format>
 </match>
 ```
-
-### Configuration
-
-| name                      |type     | description |
-| --------------            | ------- | -------     |
-| rfc6587_message_size      | boolean | prepends message length for syslog transmission (false by default)  |
 
 
 ## Development

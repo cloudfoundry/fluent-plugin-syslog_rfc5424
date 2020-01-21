@@ -13,6 +13,7 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
   def test_format_default
     formatter_driver = create_driver %(
       @type syslog_rfc5424
+      rfc6587_message_size false
     )
     tag = "test-formatter"
     time = Fluent::EventTime.new(0, 123456000)
@@ -52,6 +53,7 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
     formatter_driver = create_driver %(
       @type syslog_rfc5424
       app_name_field example.custom_field
+      rfc6587_message_size false
     )
     tag = "test-formatter"
     time = Fluent::EventTime.new(0, 123456000)
@@ -67,6 +69,7 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
     formatter_driver = create_driver %(
       @type syslog_rfc5424
       proc_id_field example.custom_field
+      rfc6587_message_size false
     )
     tag = "test-formatter"
     time = Fluent::EventTime.new(0, 123456000)

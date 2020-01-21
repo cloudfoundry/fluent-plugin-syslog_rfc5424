@@ -5,7 +5,7 @@ module Fluent
     class FormatterSyslogRFC5424 < Formatter
       Fluent::Plugin.register_formatter('syslog_rfc5424', self)
 
-      config_param :rfc6587_message_size, :bool, default: false
+      config_param :rfc6587_message_size, :bool, default: true
       config_param :app_name_field, :string, default: "app_name"
       config_param :proc_id_field, :string, default: "proc_id"
 

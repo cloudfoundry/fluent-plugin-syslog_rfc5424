@@ -15,7 +15,6 @@ module Fluent
       config_param :trusted_ca_path, :string, default: nil
       config_section :format do
         config_set_default :@type, DEFAULT_FORMATTER
-        config_set_default :rfc6587_message_size, true
       end
 
       def configure(config)
