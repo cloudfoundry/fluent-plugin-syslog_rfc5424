@@ -43,6 +43,34 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     end
   end
 
+  def test_reconnects
+    output_driver = create_driver %(
+      @type syslog_rfc5424
+      host example.com
+      port 123
+    )
+
+    bad_socket = Minitest::Mock.new
+    mock(bad_socket).puts(@formatted_log) {
+      raise StandardError
+    }
+    stub(bad_socket).close
+
+
+    good_socket = Minitest::Mock.new
+    mock(good_socket).puts(@formatted_log)
+    stub(good_socket).close
+
+    any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil}).returns(bad_socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil}).returns(good_socket)
+    end
+
+    output_driver.run(shutdown: false, force_flush_retry: true) do
+      output_driver.feed("tag", @time, {"log" => "hi"})
+    end
+  end
+
   def test_non_tls
     output_driver = create_driver %(
       @type syslog_rfc5424

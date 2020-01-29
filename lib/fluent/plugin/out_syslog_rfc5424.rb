@@ -27,7 +27,12 @@ module Fluent
         socket = find_or_create_socket(@transport.to_sym, @host, @port)
         tag = chunk.metadata.tag
         chunk.each do |time, record|
-          socket.puts @formatter.format(tag, time, record)
+          begin
+            socket.puts @formatter.format(tag, time, record)
+          rescue
+            @sockets[socket_key(@transport.to_sym, @host, @port)] = nil
+            raise
+          end
         end
       end
 
