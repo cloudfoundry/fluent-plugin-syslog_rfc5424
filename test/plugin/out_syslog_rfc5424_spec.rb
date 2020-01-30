@@ -31,7 +31,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     )
 
     socket = Minitest::Mock.new
-    mock(socket).puts(@formatted_log)
+    mock(socket).write(@formatted_log)
     stub(socket).close
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
@@ -51,14 +51,14 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     )
 
     bad_socket = Minitest::Mock.new
-    mock(bad_socket).puts(@formatted_log) {
+    mock(bad_socket).write(@formatted_log) {
       raise StandardError
     }
     stub(bad_socket).close
 
 
     good_socket = Minitest::Mock.new
-    mock(good_socket).puts(@formatted_log)
+    mock(good_socket).write(@formatted_log)
     stub(good_socket).close
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
@@ -80,7 +80,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     )
 
     socket = Minitest::Mock.new
-    mock(socket).puts(@formatted_log)
+    mock(socket).write(@formatted_log)
     stub(socket).close
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
@@ -102,7 +102,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     )
 
     socket = Minitest::Mock.new
-    mock(socket).puts(@formatted_log)
+    mock(socket).write(@formatted_log)
     stub(socket).close
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
@@ -124,7 +124,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     )
 
     socket = Minitest::Mock.new
-    mock(socket).puts(@formatted_log)
+    mock(socket).write(@formatted_log)
     stub(socket).close
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
@@ -144,7 +144,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     )
 
     socket = Minitest::Mock.new
-    stub(socket).puts(@formatted_log)
+    stub(socket).write(@formatted_log)
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
       mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil}).returns(socket)

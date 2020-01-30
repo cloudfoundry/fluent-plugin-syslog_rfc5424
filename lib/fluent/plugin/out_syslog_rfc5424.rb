@@ -28,7 +28,7 @@ module Fluent
         tag = chunk.metadata.tag
         chunk.each do |time, record|
           begin
-            socket.puts @formatter.format(tag, time, record)
+            socket.write @formatter.format(tag, time, record)
           rescue
             @sockets[socket_key(@transport.to_sym, @host, @port)] = nil
             raise

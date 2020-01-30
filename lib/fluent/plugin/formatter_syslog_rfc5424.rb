@@ -32,7 +32,7 @@ module Fluent
         log.debug("RFC 5424 Message")
         log.debug(msg)
 
-        return msg unless @rfc6587_message_size
+        return msg + "\n" unless @rfc6587_message_size
 
         msg.length.to_s + ' ' + msg
       end
