@@ -28,9 +28,11 @@ module Fluent
         tag = chunk.metadata.tag
         chunk.each do |time, record|
           begin
-            socket.write @formatter.format(tag, time, record)
-          rescue
-            @sockets[socket_key(@transport.to_sym, @host, @port)] = nil
+            socket.write_nonblock @formatter.format(tag, time, record)
+            IO.select(nil, [socket], nil, 1) || raise(StandardError.new "ReconnectError")
+          rescue => e
+            @sockets.delete(socket_key(@transport.to_sym, @host, @port))
+            socket.close
             raise
           end
         end
@@ -54,7 +56,8 @@ module Fluent
       def socket_options
         return {} unless @transport == 'tls'
 
-        { insecure: @insecure, verify_fqdn: !@insecure, cert_paths: @trusted_ca_path }
+        # TODO: make timeouts configurable
+        { insecure: @insecure, verify_fqdn: !@insecure, cert_paths: @trusted_ca_path } #, connect_timeout: 1, send_timeout: 1, recv_timeout: 1, linger_timeout: 1 } 
       end
 
       def socket_key(transport, host, port)

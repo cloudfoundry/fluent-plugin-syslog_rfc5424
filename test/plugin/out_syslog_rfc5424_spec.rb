@@ -30,10 +30,12 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
       port 123
     )
 
-    socket = Minitest::Mock.new
-    mock(socket).write(@formatted_log)
+    socket = Object.new
+    mock(socket).write_nonblock(@formatted_log)
     stub(socket).close
 
+    stub(IO).select(nil, [socket], nil, 1) { ["not an error"] }
+    
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
       mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil}).returns(socket)
     end
@@ -50,16 +52,16 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
       port 123
     )
 
-    bad_socket = Minitest::Mock.new
-    mock(bad_socket).write(@formatted_log) {
-      raise StandardError
-    }
+    bad_socket = Object.new
+    mock(bad_socket).write_nonblock(@formatted_log)
     stub(bad_socket).close
-
-
-    good_socket = Minitest::Mock.new
-    mock(good_socket).write(@formatted_log)
+    
+    good_socket = Object.new
+    mock(good_socket).write_nonblock(@formatted_log)
     stub(good_socket).close
+
+    mock(IO).select(nil, [bad_socket], nil, 1)
+    mock(IO).select(nil, [good_socket], nil, 1) { ["not an error"] }
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
       mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil}).returns(bad_socket)
@@ -79,9 +81,11 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
       transport tcp
     )
 
-    socket = Minitest::Mock.new
-    mock(socket).write(@formatted_log)
+    socket = Object.new
+    mock(socket).write_nonblock(@formatted_log)
     stub(socket).close
+
+    stub(IO).select(nil, [socket], nil, 1) { ["not an error"] }
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
       mock(fluent_plugin).socket_create(:tcp, "example.com", 123, {}).returns(socket)
@@ -101,9 +105,11 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
       insecure true
     )
 
-    socket = Minitest::Mock.new
-    mock(socket).write(@formatted_log)
+    socket = Object.new
+    mock(socket).write_nonblock(@formatted_log)
     stub(socket).close
+
+    stub(IO).select(nil, [socket], nil, 1) { ["not an error"] }
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
       mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>true, :verify_fqdn=>false, :cert_paths=>nil}).returns(socket)
@@ -123,9 +129,11 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
       trusted_ca_path supertrustworthy
     )
 
-    socket = Minitest::Mock.new
-    mock(socket).write(@formatted_log)
+    socket = Object.new
+    mock(socket).write_nonblock(@formatted_log)
     stub(socket).close
+
+    stub(IO).select(nil, [socket], nil, 1) { ["not an error"] }
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
       mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>"supertrustworthy"}).returns(socket)
@@ -143,14 +151,16 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
       port 123
     )
 
-    socket = Minitest::Mock.new
-    stub(socket).write(@formatted_log)
+    socket = Object.new
+    stub(socket).write_nonblock(@formatted_log)
+    mock(socket).close
+
+    stub(IO).select(nil, [socket], nil, 1) { ["not an error"] }
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
       mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil}).returns(socket)
     end
 
-    mock(socket).close
     output_driver.run do
       output_driver.feed("tag", @time , {"log" => "hi"})
     end
