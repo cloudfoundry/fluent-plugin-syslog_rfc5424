@@ -16,9 +16,6 @@ module Fluent
       end
 
       def format(tag, time, record)
-        log.debug("Tag")
-        log.debug(tag.to_s)
-
         log.debug("Record")
         log.debug(record.map { |k, v| "#{k}=#{v}" }.join('&'))
 
