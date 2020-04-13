@@ -54,8 +54,12 @@ Defaults to `syslog_rfc5424`
 | name                      |type     | description |
 | --------------            | ------- | -------     |
 | rfc6587_message_size      | boolean | prepends message length for syslog transmission (true by default)  |
+| hostname_field            | string  | sets host name in syslog from field in fluentd, delimited by '.' (default hostname) |
 | app_name_field            | string  | sets app name in syslog from field in fluentd, delimited by '.' (default app_name) |
 | proc_id_field             | string  | sets proc id in syslog from field in fluentd, delimited by '.' (default proc_id) |
+| message_id_field          | string  | sets msg id in syslog from field in fluentd, delimited by '.' (default message_id) |
+| structured_data_field     | string  | sets structured data in syslog from field in fluentd, delimited by '.' (default structured_data) |
+| log_field                 | string  | sets log in syslog from field in fluentd, delimited by '.' (default log) |
 
 
 ## Formatter Usage
