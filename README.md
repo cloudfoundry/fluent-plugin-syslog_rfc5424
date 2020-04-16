@@ -2,8 +2,7 @@
 
 [![Build Status](https://travis-ci.org/cloudfoundry/fluent-plugin-syslog_rfc5424.svg?branch=master)](https://travis-ci.org/cloudfoundry/fluent-plugin-syslog_rfc5424)
 
-
-Formatter plugin adheres to [RFC5424](https://tools.ietf.org/html/rfc5424). 
+Formatter plugin adheres to [RFC5424](https://tools.ietf.org/html/rfc5424).
 
 Output plugin adheres to [RFC6587](https://tools.ietf.org/html/rfc6587) and [RFC5424](https://tools.ietf.org/html/rfc5424).
 
@@ -61,7 +60,6 @@ Defaults to `syslog_rfc5424`
 | structured_data_field     | string  | sets structured data in syslog from field in fluentd, delimited by '.' (default structured_data) |
 | log_field                 | string  | sets log in syslog from field in fluentd, delimited by '.' (default log) |
 
-
 ## Formatter Usage
 
 ```
@@ -74,7 +72,6 @@ Defaults to `syslog_rfc5424`
   </format>
 </match>
 ```
-
 
 ## Development
 
