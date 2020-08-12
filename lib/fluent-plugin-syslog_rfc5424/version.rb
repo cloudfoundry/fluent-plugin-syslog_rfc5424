@@ -1,3 +1,3 @@
 module FluentSyslog5424OutputPlugin
-  VERSION = "0.9.0.rc.4"
+  VERSION = "0.9.1.rc.1"
 end

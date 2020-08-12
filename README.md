@@ -53,6 +53,7 @@ Defaults to `syslog_rfc5424`
 | name                      |type     | description |
 | --------------            | ------- | -------     |
 | rfc6587_message_size      | boolean | prepends message length for syslog transmission (true by default)  |
+| priority                  | integer | sets priority in syslog from field in fluentd, delimited by '.' (default priority) |
 | hostname_field            | string  | sets host name in syslog from field in fluentd, delimited by '.' (default hostname) |
 | app_name_field            | string  | sets app name in syslog from field in fluentd, delimited by '.' (default app_name) |
 | proc_id_field             | string  | sets proc id in syslog from field in fluentd, delimited by '.' (default proc_id) |

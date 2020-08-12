@@ -6,6 +6,7 @@ module Fluent
       Fluent::Plugin.register_formatter('syslog_rfc5424', self)
 
       config_param :rfc6587_message_size, :bool, default: true
+      config_param :priority_field, :string, default: "priority"
       config_param :hostname_field, :string, default: "hostname"
       config_param :app_name_field, :string, default: "app_name"
       config_param :proc_id_field, :string, default: "proc_id"
@@ -15,6 +16,7 @@ module Fluent
 
       def configure(conf)
         super
+        @priority_field_array = @priority_field.split(".")
         @hostname_field_array = @hostname_field.split(".")
         @app_name_field_array = @app_name_field.split(".")
         @proc_id_field_array = @proc_id_field.split(".")
@@ -28,6 +30,7 @@ module Fluent
         log.debug(record.map { |k, v| "#{k}=#{v}" }.join('&'))
 
         msg = RFC5424::Formatter.format(
+          priority: record.dig(*@priority_field_array) || 14,
           log: record.dig(*@log_field_array) || "-",
           timestamp: time,
           hostname: record.dig(*@hostname_field_array) || "-",
