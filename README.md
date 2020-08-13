@@ -1,6 +1,6 @@
 # FluentD Output & Formatter Plugins: Syslog RFC5424
 
-[![Build Status](https://travis-ci.org/cloudfoundry/fluent-plugin-syslog_rfc5424.svg?branch=master)](https://travis-ci.org/cloudfoundry/fluent-plugin-syslog_rfc5424)
+[![Build Status](https://travis-ci.org/cloudfoundry/fluent-plugin-syslog_rfc5424.svg?branch=main)](https://travis-ci.org/cloudfoundry/fluent-plugin-syslog_rfc5424)
 
 Formatter plugin adheres to [RFC5424](https://tools.ietf.org/html/rfc5424).
 
