@@ -23,6 +23,10 @@ module Fluent
         @formatter = formatter_create
       end
 
+      def multi_workers_ready?
+        true
+      end
+
       def write(chunk)
         socket = find_or_create_socket(@transport.to_sym, @host, @port)
         tag = chunk.metadata.tag
