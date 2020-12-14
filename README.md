@@ -85,6 +85,8 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/cloudf
 
 ## Publishing
 
+(these steps happen automatically in this pipeline: https://release-integration.ci.cf-app.com/teams/main/pipelines/cf-k8s-logging-validation)
+
 1. Run tests `bundle exec rake`
 1. Push changes
 1. Create & push git tag with version
