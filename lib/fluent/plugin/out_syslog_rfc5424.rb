@@ -58,10 +58,14 @@ module Fluent
       end
 
       def socket_options
-        return {} unless @transport == 'tls'
-
-        # TODO: make timeouts configurable
-        { insecure: @insecure, verify_fqdn: !@insecure, cert_paths: @trusted_ca_path } #, connect_timeout: 1, send_timeout: 1, recv_timeout: 1, linger_timeout: 1 } 
+        if @transport == 'udp'
+          { connect: true }
+        elsif @transport == 'tls'
+          # TODO: make timeouts configurable
+          { insecure: @insecure, verify_fqdn: !@insecure, cert_paths: @trusted_ca_path } #, connect_timeout: 1, send_timeout: 1, recv_timeout: 1, linger_timeout: 1 }
+        else
+          {}
+        end
       end
 
       def socket_key(transport, host, port)
