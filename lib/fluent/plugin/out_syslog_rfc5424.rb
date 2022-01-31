@@ -13,6 +13,11 @@ module Fluent
       config_param :transport, :string, default: "tls"
       config_param :insecure, :bool, default: false
       config_param :trusted_ca_path, :string, default: nil
+      config_param :private_key_path, :string, default: nil
+      config_param :private_key_passphrase, :string, default: nil
+      config_param :allow_self_signed_cert, :string, default: false
+      config_param :fqdn, :string, default: nil
+      config_param :tls_version, :string, default: "TLSv1_2"
       config_section :format do
         config_set_default :@type, DEFAULT_FORMATTER
       end
@@ -62,7 +67,16 @@ module Fluent
           { connect: true }
         elsif @transport == 'tls'
           # TODO: make timeouts configurable
-          { insecure: @insecure, verify_fqdn: !@insecure, cert_paths: @trusted_ca_path } #, connect_timeout: 1, send_timeout: 1, recv_timeout: 1, linger_timeout: 1 }
+          {
+            insecure: @insecure,
+            verify_fqdn: !@insecure,
+            cert_paths: @trusted_ca_path,
+            private_key_path: @private_key_path,
+            private_key_passphrase: @private_key_passphrase,
+            allow_self_signed_cert: @allow_self_signed_cert,
+            fqdn: @fqdn,
+            tls_version: @tls_version,
+          } #, connect_timeout: 1, send_timeout: 1, recv_timeout: 1, linger_timeout: 1 }
         else
           {}
         end
