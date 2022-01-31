@@ -15,7 +15,7 @@ module Fluent
       config_param :trusted_ca_path, :string, default: nil
       config_param :private_key_path, :string, default: nil
       config_param :private_key_passphrase, :string, default: nil
-      config_param :allow_self_signed_cert, :string, default: false
+      config_param :allow_self_signed_cert, :bool, default: false
       config_param :fqdn, :string, default: nil
       config_param :version, :string, default: "TLSv1_2"
       config_section :format do
