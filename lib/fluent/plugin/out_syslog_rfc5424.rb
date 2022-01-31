@@ -17,7 +17,7 @@ module Fluent
       config_param :private_key_passphrase, :string, default: nil
       config_param :allow_self_signed_cert, :string, default: false
       config_param :fqdn, :string, default: nil
-      config_param :tls_version, :string, default: "TLSv1_2"
+      config_param :version, :string, default: "TLSv1_2"
       config_section :format do
         config_set_default :@type, DEFAULT_FORMATTER
       end
@@ -75,7 +75,7 @@ module Fluent
             private_key_passphrase: @private_key_passphrase,
             allow_self_signed_cert: @allow_self_signed_cert,
             fqdn: @fqdn,
-            tls_version: @tls_version,
+            version: @version,
           } #, connect_timeout: 1, send_timeout: 1, recv_timeout: 1, linger_timeout: 1 }
         else
           {}
