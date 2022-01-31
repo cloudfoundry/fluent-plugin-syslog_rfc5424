@@ -37,7 +37,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     stub(IO).select(nil, [socket], nil, 1) { ["not an error"] }
     
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
-      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil}).returns(socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil, :private_key_path=>nil, :private_key_passphrase=>nil}).returns(socket)
     end
 
     output_driver.run do
@@ -64,8 +64,8 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     mock(IO).select(nil, [good_socket], nil, 1) { ["not an error"] }
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
-      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil}).returns(bad_socket)
-      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil}).returns(good_socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil, :private_key_path=>nil, :private_key_passphrase=>nil}).returns(bad_socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil, :private_key_path=>nil, :private_key_passphrase=>nil}).returns(good_socket)
     end
 
     output_driver.run(shutdown: false, force_flush_retry: true) do
@@ -112,7 +112,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     stub(IO).select(nil, [socket], nil, 1) { ["not an error"] }
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
-      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>true, :verify_fqdn=>false, :cert_paths=>nil}).returns(socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>true, :verify_fqdn=>false, :cert_paths=>nil, :private_key_path=>nil, :private_key_passphrase=>nil}).returns(socket)
     end
 
     output_driver.run do
@@ -136,7 +136,33 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     stub(IO).select(nil, [socket], nil, 1) { ["not an error"] }
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
-      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>"supertrustworthy"}).returns(socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>"supertrustworthy", :private_key_path=>nil, :private_key_passphrase=>nil}).returns(socket)
+    end
+
+    output_driver.run do
+      output_driver.feed("tag", @time, {"log" => "hi"})
+    end
+  end
+
+  def test_secure_mutual_tls
+    output_driver = create_driver %(
+      @type syslog_rfc5424
+      host example.com
+      port 123
+      transport tls
+      trusted_ca_path supertrustworthy
+      private_key_path supertrustedworthyprivatekey
+      private_key_passphrase supertrustedworthypassphrase
+    )
+
+    socket = Object.new
+    mock(socket).write_nonblock(@formatted_log)
+    stub(socket).close
+
+    stub(IO).select(nil, [socket], nil, 1) { ["not an error"] }
+
+    any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>"supertrustworthy", :private_key_path=>nil, :private_key_passphrase=>nil}).returns(socket)
     end
 
     output_driver.run do
@@ -158,7 +184,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     stub(IO).select(nil, [socket], nil, 1) { ["not an error"] }
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
-      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil}).returns(socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil, :private_key_path=>nil, :private_key_passphrase=>nil}).returns(socket)
     end
 
     output_driver.run do
