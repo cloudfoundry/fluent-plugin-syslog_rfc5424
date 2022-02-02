@@ -75,7 +75,7 @@ module Fluent
             private_key_passphrase: @private_key_passphrase,
             allow_self_signed_cert: @allow_self_signed_cert,
             fqdn: @fqdn,
-            version: @version,
+            version: @version.to_sym,
           } #, connect_timeout: 1, send_timeout: 1, recv_timeout: 1, linger_timeout: 1 }
         else
           {}
