@@ -70,8 +70,8 @@ module Fluent
         elsif @transport == 'tls'
           # TODO: make timeouts configurable
           {
-            insecure: @insecure,
-            verify_fqdn: !@insecure,
+            insecure: @verify_peer.nil? ? @insecure : @verify_peer,
+            verify_fqdn: @verify_fqdn.nil? ? !@insecure : @verify_fqdn,
             cert_paths: @trusted_ca_path,
             private_key_path: @private_key_path,
             private_key_passphrase: @private_key_passphrase,
