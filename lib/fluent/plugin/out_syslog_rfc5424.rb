@@ -13,6 +13,8 @@ module Fluent
       config_param :transport, :string, default: "tls"
       config_param :insecure, :bool, default: false
       config_param :trusted_ca_path, :string, default: nil
+      config_param :verify_fqdn, :bool, default: nil
+      config_param :verify_peer, :bool, default: nil
       config_param :private_key_path, :string, default: nil
       config_param :private_key_passphrase, :string, default: nil
       config_param :allow_self_signed_cert, :bool, default: false
