@@ -1,4 +1,5 @@
 require 'fluent/plugin/output'
+require_relative 'tls_socket'
 
 module Fluent
   module Plugin
@@ -76,7 +77,7 @@ module Fluent
           {
             insecure: @verify_peer.nil? ? @insecure : @verify_peer,
             verify_fqdn: @verify_fqdn.nil? ? !@insecure : @verify_fqdn,
-            verify_peer: @verify_peer,
+            verify_peer: @verify_peer.nil? ? !@insecure : @verify_peer,
             cert_paths: @trusted_ca_path,
             private_key_path: @private_key_path,
             private_key_passphrase: @private_key_passphrase,
