@@ -76,7 +76,7 @@ module Fluent
           {
             insecure: @verify_peer.nil? ? @insecure : @verify_peer,
             verify_fqdn: @verify_fqdn.nil? ? !@insecure : @verify_fqdn,
-            veify_peer: @verify_peer,
+            verify_peer: @verify_peer,
             cert_paths: @trusted_ca_path,
             private_key_path: @private_key_path,
             private_key_passphrase: @private_key_passphrase,
