@@ -37,7 +37,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     stub(IO).select(nil, [socket], nil, 1) { ["not an error"] }
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
-      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil, :private_key_path=>nil, :private_key_passphrase=>nil, :allow_self_signed_cert=>false, :fqdn=>nil, :version=>"TLSv1_2"}).returns(socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :verify_peer=>true, :cert_paths=>nil, :private_key_path=>nil, :private_key_passphrase=>nil, :allow_self_signed_cert=>false, :fqdn=>nil, :version=>"TLSv1_2"}).returns(socket)
     end
 
     output_driver.run do
@@ -64,8 +64,8 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     mock(IO).select(nil, [good_socket], nil, 1) { ["not an error"] }
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
-      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil, :private_key_path=>nil, :private_key_passphrase=>nil, :allow_self_signed_cert=>false, :fqdn=>nil, :version=>"TLSv1_2"}).returns(bad_socket)
-      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil, :private_key_path=>nil, :private_key_passphrase=>nil, :allow_self_signed_cert=>false, :fqdn=>nil, :version=>"TLSv1_2"}).returns(good_socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :verify_peer=>true, :cert_paths=>nil, :private_key_path=>nil, :private_key_passphrase=>nil, :allow_self_signed_cert=>false, :fqdn=>nil, :version=>"TLSv1_2"}).returns(bad_socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :verify_peer=>true, :cert_paths=>nil, :private_key_path=>nil, :private_key_passphrase=>nil, :allow_self_signed_cert=>false, :fqdn=>nil, :version=>"TLSv1_2"}).returns(good_socket)
     end
 
     output_driver.run(shutdown: false, force_flush_retry: true) do
@@ -112,7 +112,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     stub(IO).select(nil, [socket], nil, 1) { ["not an error"] }
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
-      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>true, :verify_fqdn=>false, :cert_paths=>nil, :private_key_path=>nil, :private_key_passphrase=>nil, :allow_self_signed_cert=>false, :fqdn=>nil, :version=>"TLSv1_2"}).returns(socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>true, :verify_fqdn=>false, :verify_peer=>true, :cert_paths=>nil, :private_key_path=>nil, :private_key_passphrase=>nil, :allow_self_signed_cert=>false, :fqdn=>nil, :version=>"TLSv1_2"}).returns(socket)
     end
 
     output_driver.run do
@@ -136,7 +136,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     stub(IO).select(nil, [socket], nil, 1) { ["not an error"] }
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
-      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>"supertrustworthy", :private_key_path=>nil, :private_key_passphrase=>nil, :allow_self_signed_cert=>false, :fqdn=>nil, :version=>"TLSv1_2"}).returns(socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :verify_peer=>true, :cert_paths=>"supertrustworthy", :private_key_path=>nil, :private_key_passphrase=>nil, :allow_self_signed_cert=>false, :fqdn=>nil, :version=>"TLSv1_2"}).returns(socket)
     end
 
     output_driver.run do
@@ -150,6 +150,8 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
       host example.com
       port 123
       transport tls
+      verify_fqdn true
+      verify_peer true
       trusted_ca_path supertrustworthy
       private_key_path supertrustworthykey
       private_key_passphrase supertrustworthypassphrase
@@ -165,7 +167,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     stub(IO).select(nil, [socket], nil, 1) { ["not an error"] }
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
-      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>"supertrustworthy", :private_key_path=>"supertrustworthykey", :private_key_passphrase=>"supertrustworthypassphrase", :allow_self_signed_cert=>false, :fqdn=>"supertrustworthyfqdn", :version=>"TLSv1_2"}).returns(socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :verify_peer=>true, :cert_paths=>"supertrustworthy", :private_key_path=>"supertrustworthykey", :private_key_passphrase=>"supertrustworthypassphrase", :allow_self_signed_cert=>false, :fqdn=>"supertrustworthyfqdn", :version=>"TLSv1_2"}).returns(socket)
     end
 
     output_driver.run do
@@ -187,7 +189,7 @@ class OutSyslogRFC5424Test < Test::Unit::TestCase
     stub(IO).select(nil, [socket], nil, 1) { ["not an error"] }
 
     any_instance_of(Fluent::Plugin::OutSyslogRFC5424) do |fluent_plugin|
-      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :cert_paths=>nil, :private_key_path=>nil, :private_key_passphrase=>nil, :allow_self_signed_cert=>false, :fqdn=>nil, :version=>"TLSv1_2"}).returns(socket)
+      mock(fluent_plugin).socket_create(:tls, "example.com", 123, {:insecure=>false, :verify_fqdn=>true, :verify_peer=>true, :cert_paths=>nil, :private_key_path=>nil, :private_key_passphrase=>nil, :allow_self_signed_cert=>false, :fqdn=>nil, :version=>"TLSv1_2"}).returns(socket)
     end
 
     output_driver.run do

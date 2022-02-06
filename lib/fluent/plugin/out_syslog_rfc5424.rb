@@ -16,7 +16,7 @@ module Fluent
       config_param :verify_fqdn, :bool, default: nil
       config_param :verify_peer, :bool, default: nil
       config_param :private_key_path, :string, default: nil
-      config_param :private_key_passphrase, :string, default: nil
+      config_param :private_key_passphrase, :string, default: nil, secret: true
       config_param :allow_self_signed_cert, :bool, default: false
       config_param :fqdn, :string, default: nil
       config_param :version, :string, default: "TLSv1_2"
@@ -61,7 +61,11 @@ module Fluent
         socket = find_socket(transport, host, port)
         return socket if socket
 
-        @sockets[socket_key(transport, host, port)] = socket_create(transport.to_sym, host, port, socket_options)
+        if transport == 'tls'
+          @sockets[socket_key(transport, host, port)] = create_tls_socket(host, port, socket_options)
+        else
+          @sockets[socket_key(transport, host, port)] = socket_create(transport.to_sym, host, port, socket_options)
+        end
       end
 
       def socket_options
@@ -72,6 +76,7 @@ module Fluent
           {
             insecure: @verify_peer.nil? ? @insecure : @verify_peer,
             verify_fqdn: @verify_fqdn.nil? ? !@insecure : @verify_fqdn,
+            veify_peer: @verify_peer,
             cert_paths: @trusted_ca_path,
             private_key_path: @private_key_path,
             private_key_passphrase: @private_key_passphrase,
