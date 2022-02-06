@@ -56,13 +56,7 @@ def create_tls_socket(
     log.trace "setting TLS context", mode: "peer", ciphers: ciphers
     context.set_params({})
     context.ciphers = ciphers
-
-    if verify_peer
-      context.verify_mode = OpenSSL::SSL::VERIFY_PEER
-    else
-      context.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    end
-
+    context.verify_mode = verify_peer ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE
     context.cert_store = cert_store
     context.verify_hostname = verify_fqdn && fqdn
     context.key = OpenSSL::PKey::read(File.read(private_key_path), private_key_passphrase) if private_key_path
