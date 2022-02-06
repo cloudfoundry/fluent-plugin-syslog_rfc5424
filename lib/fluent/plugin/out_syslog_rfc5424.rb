@@ -61,12 +61,7 @@ module Fluent
       def find_or_create_socket(transport, host, port)
         socket = find_socket(transport, host, port)
         return socket if socket
-
-        if transport == 'tls'
-          @sockets[socket_key(transport, host, port)] = create_tls_socket(host, port, socket_options)
-        else
-          @sockets[socket_key(transport, host, port)] = socket_create(transport.to_sym, host, port, socket_options)
-        end
+        @sockets[socket_key(transport, host, port)] = create_tls_socket(host, port, socket_options)
       end
 
       def socket_options
