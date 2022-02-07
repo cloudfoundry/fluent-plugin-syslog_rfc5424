@@ -1,5 +1,4 @@
 require 'fluent/plugin/output'
-require_relative 'tls_socket'
 
 module Fluent
   module Plugin
@@ -15,10 +14,11 @@ module Fluent
       config_param :insecure, :bool, default: false
       config_param :trusted_ca_path, :string, default: nil
       config_param :verify_fqdn, :bool, default: nil
-      config_param :verify_peer, :bool, default: nil
+      config_param :client_cert_path, :string, default: nil
       config_param :private_key_path, :string, default: nil
       config_param :private_key_passphrase, :string, default: nil, secret: true
       config_param :allow_self_signed_cert, :bool, default: false
+      config_param :enable_system_cert_store, :bool, default: true
       config_param :fqdn, :string, default: nil
       config_param :version, :string, default: "TLSv1_2"
       config_section :format do
@@ -61,8 +61,8 @@ module Fluent
       def find_or_create_socket(transport, host, port)
         socket = find_socket(transport, host, port)
         return socket if socket
-        @sockets[socket_key(transport, host, port)] = (transport == :tls) ? create_tls_socket(host, port, socket_options) :
-                                                        socket_create(transport.to_sym, host, port, socket_options)
+
+        @sockets[socket_key(transport, host, port)] = socket_create(transport.to_sym, host, port, socket_options)
       end
 
       def socket_options
@@ -71,15 +71,16 @@ module Fluent
         elsif @transport == 'tls'
           # TODO: make timeouts configurable
           {
-            insecure: @verify_peer.nil? ? @insecure : @verify_peer,
+            insecure: @insecure,
             verify_fqdn: @verify_fqdn.nil? ? !@insecure : @verify_fqdn,
-            verify_peer: @verify_peer.nil? ? !@insecure : @verify_peer,
-            cert_paths: @trusted_ca_path,
+            cert_paths: [@trusted_ca_path],
+            cert_path: @client_cert_path,
             private_key_path: @private_key_path,
             private_key_passphrase: @private_key_passphrase,
             allow_self_signed_cert: @allow_self_signed_cert,
+            enable_system_cert_store: @enable_system_cert_store,
             fqdn: @fqdn,
-            version: @version.to_sym,
+            version: @version.to_sym
           } #, connect_timeout: 1, send_timeout: 1, recv_timeout: 1, linger_timeout: 1 }
         else
           {}
