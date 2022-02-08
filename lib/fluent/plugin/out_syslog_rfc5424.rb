@@ -13,6 +13,14 @@ module Fluent
       config_param :transport, :string, default: "tls"
       config_param :insecure, :bool, default: false
       config_param :trusted_ca_path, :string, default: nil
+      config_param :verify_fqdn, :bool, default: nil
+      config_param :client_cert_path, :string, default: nil
+      config_param :private_key_path, :string, default: nil
+      config_param :private_key_passphrase, :string, default: nil, secret: true
+      config_param :allow_self_signed_cert, :bool, default: false
+      config_param :enable_system_cert_store, :bool, default: true
+      config_param :fqdn, :string, default: nil
+      config_param :version, :string, default: "TLSv1_2"
       config_section :format do
         config_set_default :@type, DEFAULT_FORMATTER
       end
@@ -62,7 +70,18 @@ module Fluent
           { connect: true }
         elsif @transport == 'tls'
           # TODO: make timeouts configurable
-          { insecure: @insecure, verify_fqdn: !@insecure, cert_paths: @trusted_ca_path } #, connect_timeout: 1, send_timeout: 1, recv_timeout: 1, linger_timeout: 1 }
+          {
+            insecure: @insecure,
+            verify_fqdn: @verify_fqdn.nil? ? !@insecure : @verify_fqdn,
+            cert_paths: [@trusted_ca_path],
+            cert_path: @client_cert_path,
+            private_key_path: @private_key_path,
+            private_key_passphrase: @private_key_passphrase,
+            allow_self_signed_cert: @allow_self_signed_cert,
+            enable_system_cert_store: @enable_system_cert_store,
+            fqdn: @fqdn,
+            version: @version.to_sym
+          } #, connect_timeout: 1, send_timeout: 1, recv_timeout: 1, linger_timeout: 1 }
         else
           {}
         end
