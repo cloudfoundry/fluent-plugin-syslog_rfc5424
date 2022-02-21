@@ -2,7 +2,7 @@ require 'date'
 
 module RFC5424
   class Formatter
-    Format = "<%d>1 %s %s %s %s %s [%s] %s"
+    Format = "<%d>1 %s %s %s %s %s %s %s"
 
     class << self
       def format(
