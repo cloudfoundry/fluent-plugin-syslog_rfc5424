@@ -6,7 +6,7 @@ module RFC5424
 
     class << self
       def format(
-        priority: 14,
+        priority: 133,
         timestamp: nil,
         log: "",
         hostname: "-",
