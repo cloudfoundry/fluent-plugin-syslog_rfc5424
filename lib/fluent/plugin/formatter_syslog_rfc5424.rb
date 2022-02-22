@@ -34,7 +34,7 @@ module Fluent
           app_name: record.dig(*@app_name_field_array) || "-",
           proc_id: record.dig(*@proc_id_field_array) || "-",
           msg_id: record.dig(*@message_id_field_array) || "-",
-          sd: record.dig(*@structured_data_field_array) || "-"
+          sd: RFC5424::StructuredData.new(sd_id: record.dig(*@structured_data_field_array)).to_s || "-"
         )
 
         log.debug("RFC 5424 Message")

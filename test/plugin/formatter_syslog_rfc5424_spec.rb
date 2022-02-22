@@ -18,7 +18,7 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
     tag = "test-formatter"
     time = Fluent::EventTime.new(0, 123456000)
     record = {"log" => "test-log"}
-    assert_equal "<14>1 1970-01-01T00:00:00.123456+00:00 - - - - - test-log\n",
+    assert_equal "<14>1 1970-01-01T00:00:00.123456+00:00 - - - - [] test-log\n",
                  formatter_driver.instance.format(tag, time, record)
   end
 
@@ -30,7 +30,7 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
     tag = "test-formatter"
     time = Fluent::EventTime.new(0, 123456000)
     record = {"log" => "test-log"}
-    assert_equal "<14>1 1970-01-01T00:00:00.123456+00:00 - - - - - test-log\n",
+    assert_equal "<14>1 1970-01-01T00:00:00.123456+00:00 - - - - [] test-log\n",
                  formatter_driver.instance.format(tag, time, record)
   end
 
@@ -43,7 +43,7 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
     time = Fluent::EventTime.new(0, 123456000)
     record = {"log" => "test-log"}
 
-    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - - - - - test-log"
+    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - - - - [] test-log"
     message_size = formatted_message.length
     assert_equal "#{message_size} #{formatted_message}",
                  formatter_driver.instance.format(tag, time, record)
@@ -59,7 +59,7 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
     time = Fluent::EventTime.new(0, 123456000)
     record = {"log" => "test-log", "example" => {"custom_field" => "custom-value"}}
 
-    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - custom-value - - - test-log\n"
+    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - custom-value - - [] test-log\n"
     message_size = formatted_message.length
     assert_equal "#{formatted_message}",
                  formatter_driver.instance.format(tag, time, record)
@@ -75,7 +75,7 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
     time = Fluent::EventTime.new(0, 123456000)
     record = {"log" => "test-log", "example" => {"custom_field" => "custom-value"}}
 
-    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - - - - - custom-value\n"
+    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - - - - [] custom-value\n"
     message_size = formatted_message.length
     assert_equal "#{formatted_message}",
                  formatter_driver.instance.format(tag, time, record)
@@ -91,7 +91,7 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
     time = Fluent::EventTime.new(0, 123456000)
     record = {"log" => "test-log", "example" => {"custom_field" => "custom-value"}}
 
-    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - - - - custom-value test-log\n"
+    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - - - - [custom-value] test-log\n"
     message_size = formatted_message.length
     assert_equal "#{formatted_message}",
                  formatter_driver.instance.format(tag, time, record)
@@ -107,7 +107,7 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
     time = Fluent::EventTime.new(0, 123456000)
     record = {"log" => "test-log", "example" => {"custom_field" => "custom-value"}}
 
-    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 custom-value - - - - test-log\n"
+    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 custom-value - - - [] test-log\n"
     message_size = formatted_message.length
     assert_equal "#{formatted_message}",
                  formatter_driver.instance.format(tag, time, record)
@@ -123,7 +123,7 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
     time = Fluent::EventTime.new(0, 123456000)
     record = {"log" => "test-log", "example" => {"custom_field" => "custom-value"}}
 
-    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - - custom-value - - test-log\n"
+    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - - custom-value - [] test-log\n"
     message_size = formatted_message.length
     assert_equal "#{formatted_message}",
                  formatter_driver.instance.format(tag, time, record)
@@ -139,7 +139,7 @@ class FormatterSyslogRFC5424Test < Test::Unit::TestCase
     time = Fluent::EventTime.new(0, 123456000)
     record = {"log" => "test-log", "example" => {"custom_field" => "custom-value"}}
 
-    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - - - custom-value - test-log\n"
+    formatted_message = "<14>1 1970-01-01T00:00:00.123456+00:00 - - - custom-value [] test-log\n"
     message_size = formatted_message.length
     assert_equal "#{formatted_message}",
                  formatter_driver.instance.format(tag, time, record)
